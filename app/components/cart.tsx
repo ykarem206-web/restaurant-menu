@@ -8,19 +8,19 @@ export default function Cart(props: {
   const renderedProducts = props.selectedProducts.map((product, index) => {
     return (
       <SelectedProduct
-        // استخدمنا الـ index مع الـ id عشان لو ضاف نفس الوجبة بحجمين مختلفين ميعملش مشكلة في الـ key
+
         key={`${product.id}-${product.selectedSize}-${index}`} 
         id={product.id}
         title={product.title}
-        selectedPrice={product.selectedPrice} // غيرناها للاسم الجديد
-        selectedSize={product.selectedSize}   // ضفنا الحجم عشان نعرضه
+        selectedPrice={product.selectedPrice} 
+        selectedSize={product.selectedSize}   
         count={product.count}
         onDecreaseFromCart={props.onDecreaseFromCart}
       />
     );
   });
 
-  // تحديث طريقة حساب الإجمالي باستخدام السعر المختار
+
   const totalPrice = props.selectedProducts.reduce((total, product) => {
     return (product.selectedPrice * product.count) + total;
   }, 0);
@@ -49,7 +49,7 @@ export default function Cart(props: {
   );
 }
 
-// تعديل الـ Props عشان تقبل البيانات الجديدة
+
 function SelectedProduct({
   id,
   title,
