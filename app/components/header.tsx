@@ -9,6 +9,7 @@ export default function Header() {
         width={150} 
         height={100} 
         className="rounded-xl shadow-lg object-contain" 
+        unoptimized
       />
     </div>
   );
