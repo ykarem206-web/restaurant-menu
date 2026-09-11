@@ -102,14 +102,14 @@ export default function Cart(props: {
             <form onSubmit={handleWhatsAppCheckout} className="flex flex-col gap-4">
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">الاسم الكريم</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">الاسم</label>
                 <input 
                   type="text" 
                   required
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="محمد أحمد..."
-                  className="w-full border border-gray-200 rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50"
+                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50"
                 />
               </div>
 
@@ -121,7 +121,7 @@ export default function Cart(props: {
                   onChange={(e) => setCustomerAddress(e.target.value)}
                   placeholder="المنطقة، الشارع، رقم العمارة، الدور..."
                   rows={2}
-                  className="w-full border border-gray-200 rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50 resize-none"
+                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50 resize-none"
                 />
               </div>
 
@@ -133,7 +133,7 @@ export default function Cart(props: {
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="01xxxxxxxxx"
-                  className="w-full border border-gray-200 rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50 text-left"
+                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50 text-left"
                   dir="ltr"
                 />
               </div>
