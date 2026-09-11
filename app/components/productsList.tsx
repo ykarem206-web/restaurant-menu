@@ -1,31 +1,47 @@
-import { Product } from "@/data/menuData"; 
-import { CartItem } from "@/data/menuData";
+import { Product, CartItem } from "@/data/menuData";
 
 export default function ProductsList(props: {
   products: Product[];
   onAddToCart: (product: Omit<CartItem, 'count'>) => void;
 }) {
-  const singleProduct = props.products.map((product) => {
-    return (
-      <SingleProduct
-        key={product.id}
-        id={product.id}
-        title={product.title}
-        prices={product.prices} 
-        category={product.category}
-        description={product.description}
-        onAddToCart={props.onAddToCart}
-      />
-    );
-  });
+  
+  const groupedProducts = props.products.reduce((acc, product) => {
+    if (!acc[product.category]) {
+      acc[product.category] = [];
+    }
+    acc[product.category].push(product);
+    return acc;
+  }, {} as Record<string, Product[]>);
 
   return (
-    // خلينا الشبكة عمود واحد في الموبايل عشان تدي شكل الليست بتاع طلبات
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-      {singleProduct}
+    <div className="flex flex-col gap-10 mb-4">
+      {Object.entries(groupedProducts).map(([category, categoryProducts]) => (
+        <div key={category} id={category} className="flex flex-col gap-5 scroll-mt-28">
+          
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-extrabold text-gray-800 whitespace-nowrap">
+              {category}
+            </h2>
+            <div className="flex-1 h-0.5 bg-gray-200 rounded-full"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {categoryProducts.map((product) => (
+              <SingleProduct
+                key={product.id}
+                {...product}
+                onAddToCart={props.onAddToCart}
+              />
+            ))}
+          </div>
+          
+        </div>
+      ))}
     </div>
   );
 }
+
+
 
 function SingleProduct({
   id,
@@ -36,21 +52,15 @@ function SingleProduct({
   onAddToCart,
 }: Product & { onAddToCart: (product: Omit<CartItem, 'count'>) => void }) {
   return (
-    // التعديل السحري هنا: flex-row بدل flex-col عشان العناصر تيجي جنب بعض
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-row hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-row transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       
-      {/* حاوية الصورة: خدت عرض ثابت (تلت المساحة تقريباً) */}
-      <div className="w-1/3 min-w-30 bg-gray-200 relative shrink-0">
-        <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm text-center p-2">
-          صورة الوجبة
-        </div>
+      <div className="w-1/3 min-w-25 bg-linear-to-br from-gray-100 to-gray-200 relative shrink-0 flex items-center justify-center border-l border-gray-100">
+        <span className="text-gray-400 text-xs font-medium">صورة الوجبة</span>
       </div>
 
-      {/* حاوية النصوص والتفاصيل: خدت باقي المساحة بـ flex-1 */}
       <div className="p-3 flex flex-col flex-1 gap-2 justify-between">
-
         <div>
-          <h3 className="font-bold text-gray-800 text-base leading-tight">
+          <h3 className="font-bold text-gray-800 text-md leading-tight">
             {title}
           </h3>
           {description && (
@@ -60,16 +70,15 @@ function SingleProduct({
           )}
         </div>
 
-        {/* الأسعار والزراير */}
-        <div className="flex flex-col gap-2 mt-1">
+        <div className="flex flex-col gap-2 mt-2">
           {Object.entries(prices).map(([size, price]) => (
             <div
               key={size}
-              className="flex justify-between items-center bg-gray-50 p-1.5 rounded-lg border border-gray-100"
+              className="flex justify-between items-center bg-gray-50/50 p-2 rounded-xl border border-gray-100 transition-colors hover:bg-orange-50/30"
             >
-              <span className="text-xs font-medium text-gray-700">
+              <span className="text-xs font-semibold text-gray-700">
                 {size} <span className="text-gray-300 mx-1">|</span>{" "}
-                <span className="text-orange-600 font-bold">{price} ج.م</span>
+                <span className="text-orange-600 font-bold text-sm">{price} ج.م</span>
               </span>
 
               <button
@@ -84,7 +93,7 @@ function SingleProduct({
                     selectedPrice: price,
                   });
                 }}
-                className="bg-orange-500 text-white w-7 h-7 rounded-full flex justify-center items-center font-bold text-lg cursor-pointer hover:bg-orange-600 shadow-sm"
+                className="bg-orange-500 text-white w-8 h-8 rounded-full flex justify-center items-center font-bold text-lg cursor-pointer transition-all hover:bg-orange-600 hover:shadow-md active:scale-90"
               >
                 +
               </button>
@@ -92,7 +101,6 @@ function SingleProduct({
           ))}
         </div>
       </div>
-
     </div>
   );
 }
