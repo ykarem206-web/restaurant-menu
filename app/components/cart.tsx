@@ -32,7 +32,6 @@ export default function Cart(props: {
       const itemTotal = product.selectedPrice * product.count;
       message += `${index + 1}. ${product.title} (${product.selectedSize})\n`;
       message += `الكمية: ${product.count} | السعر: ${itemTotal} ج.م\n`;
-      message += `---------------------------\n`;
     });
 
     message += `\n💰 *الإجمالي الكلي: ${totalPrice} ج.م*\n`;

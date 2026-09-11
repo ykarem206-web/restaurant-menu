@@ -1,3 +1,6 @@
+"use client";
+import { useEffect, useRef } from "react";
+
 const categories = [
   { id: 1, title: "الكل" },
   { id: 2, title: "المناقيش" },
@@ -18,7 +21,6 @@ const categories = [
   { id: 17, title: "ماريا" },
 ];
 
-
 export default function Filter({ 
   activeCategory, 
   setCategory 
@@ -26,8 +28,19 @@ export default function Filter({
   activeCategory: string; 
   setCategory: (cat: string) => void; 
 }) {
-  
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const activeButton = document.getElementById(`filter-btn-${activeCategory}`);
+    if (activeButton && scrollContainerRef.current) {
+      activeButton.scrollIntoView({ 
+        behavior: "smooth", 
+        inline: "center", 
+        block: "nearest" 
+      });
+    }
+  }, [activeCategory]);
+  
   const handleCategoryClick = (title: string) => {
     setCategory(title);
     
@@ -42,13 +55,14 @@ export default function Filter({
   };
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-2">
+    <div ref={scrollContainerRef} className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-2">
       {categories.map(({ id, title }) => {
         const isActive = activeCategory === title;
         
         return (
           <button
             key={id}
+            id={`filter-btn-${title}`}
             onClick={() => handleCategoryClick(title)}
             className={`whitespace-nowrap px-6 py-2 rounded-full font-bold transition-all duration-300 shadow-sm cursor-pointer border ${
               isActive
