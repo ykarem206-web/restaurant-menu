@@ -11,6 +11,7 @@ export default function Cart(props: {
   const [customerName, setCustomerName] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const totalPrice = props.selectedProducts.reduce(
     (total, product) => product.selectedPrice * product.count + total,
@@ -19,6 +20,26 @@ export default function Cart(props: {
 
   const handleWhatsAppCheckout = (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
+
+    const phoneRegex = /^01[0125][0-9]{8}$/;
+    if (!phoneRegex.test(customerPhone)) {
+      setErrorMsg("رقم الهاتف غير صحيح. تأكد أنه رقم مصري من 11 رقم (مثال: 01012345678)");
+      return;
+    }
+
+
+    const lastOrderTime = localStorage.getItem("lastOrderTime");
+    if (lastOrderTime) {
+      const timeDiff = Date.now() - parseInt(lastOrderTime);
+      const cooldown = 3 * 60 * 1000;
+      
+      if (timeDiff < cooldown) {
+        const minutesLeft = Math.ceil((cooldown - timeDiff) / 60000);
+        setErrorMsg(`لقد قمت بإرسال طلب بالفعل! يرجى الانتظار ${minutesLeft} دقيقة قبل إرسال طلب جديد.`);
+        return;
+      }
+    }
 
     const phoneNumber = "201020685597"; 
 
@@ -36,6 +57,8 @@ export default function Cart(props: {
 
     message += `\n💰 *الإجمالي الكلي: ${totalPrice} ج.م*\n`;
     message += `\nشكراً لكم!`;
+
+    localStorage.setItem("lastOrderTime", Date.now().toString());
 
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
@@ -98,6 +121,12 @@ export default function Cart(props: {
               </button>
             </div>
 
+            {errorMsg && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium">
+                ⚠️ {errorMsg}
+              </div>
+            )}
+
             <form onSubmit={handleWhatsAppCheckout} className="flex flex-col gap-4">
               
               <div>
@@ -129,8 +158,13 @@ export default function Cart(props: {
                 <input 
                   type="tel" 
                   required
+                  maxLength={11}
                   value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  onChange={(e) => {
+                    const onlyEnglishNumbers = e.target.value.replace(/[^0-9]/g, '');
+                    setCustomerPhone(onlyEnglishNumbers);
+                    setErrorMsg("");
+                  }}
                   placeholder="01xxxxxxxxx"
                   className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50 text-left"
                   dir="ltr"

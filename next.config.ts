@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import withPWA from "@ducanh2912/next-pwa";
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -11,4 +12,10 @@ const nextConfig: NextConfig = {
   assetPrefix: isProd ? '/restaurant-menu' : '',
 };
 
-export default nextConfig;
+const withPWAConfig = withPWA({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+});
+
+export default withPWAConfig(nextConfig);
