@@ -25,6 +25,7 @@ export default function MainApp () {
           fetchedProducts.push(doc.data() as Product);
         });
 
+        fetchedProducts.sort((a, b) => a.id - b.id);
         setProducts(fetchedProducts);
       } catch (error) {
         console.error("Error fetching products: ", error);

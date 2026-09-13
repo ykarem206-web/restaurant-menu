@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebase"; 
 import { Product } from "../../data/menuData";
@@ -35,6 +35,7 @@ export default function AdminDashboard() {
       querySnapshot.forEach((doc) => {
         fetchedProducts.push(doc.data() as Product);
       });
+      fetchedProducts.sort((a, b) => a.id - b.id);
       setProducts(fetchedProducts);
     } catch (error) {
       console.error("Error fetching products: ", error);
@@ -117,6 +118,13 @@ export default function AdminDashboard() {
     }
   };
 
+  const groupedProducts = products.reduce((acc, product) => {
+    if (!acc[product.category]) {
+      acc[product.category] = [];
+    }
+    acc[product.category].push(product);
+    return acc;
+  }, {} as Record<string, Product[]>);
 
   const existingCategories = Array.from(new Set(products.map(p => p.category)));
 
@@ -199,49 +207,65 @@ export default function AdminDashboard() {
         ) : (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-right whitespace-nowrap">
-                <thead className="bg-gray-50 border-b border-gray-100">
+              <table className="w-full text-right">
+                <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
                   <tr>
-                    <th className="p-4 font-bold text-gray-600">القسم</th>
                     <th className="p-4 font-bold text-gray-600">اسم الوجبة</th>
                     <th className="p-4 font-bold text-gray-600">الأسعار الحالية</th>
                     <th className="p-4 font-bold text-gray-600 text-center">إجراءات</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {products.map((product) => (
-                    <tr key={product.id} className="border-b border-gray-50 hover:bg-orange-50/30 transition-colors">
-                      <td className="p-4 text-gray-500 font-medium">{product.category}</td>
-                      <td className="p-4 font-bold text-gray-800">{product.title}</td>
-                      <td className="p-4">
-                        <div className="flex flex-wrap gap-2">
-                          {Object.entries(product.prices).map(([size, price]) => (
-                            <span key={size} className="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full font-semibold border border-gray-200">
-                              {size}: {price} ج.م
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex flex-wrap justify-center gap-2">
-                          {Object.entries(product.prices).map(([size, price]) => (
-                            <button
-                              key={size}
-                              onClick={() => handleEditPrice(product.id, size, price)}
-                              className="bg-orange-100 text-orange-600 text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-orange-500 hover:text-white transition-colors cursor-pointer"
-                            >
-                              تعديل ({size})
-                            </button>
-                          ))}
-                          <button
-                            onClick={() => handleDeleteProduct(product.id, product.title)}
-                            className="bg-red-50 text-red-500 text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
-                          >
-                            مسح
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                
+                <tbody className="block md:table-row-group">
+                  {Object.entries(groupedProducts).map(([category, categoryProducts]) => (
+                    <React.Fragment key={category}>
+
+                      <tr className="block md:table-row bg-orange-100/50 border-y border-orange-200">
+                        <td colSpan={3} className="block md:table-cell p-3 md:p-4 font-extrabold text-orange-800 text-lg">
+                          📋 قسم: {category}
+                        </td>
+                      </tr>
+                      
+                      {categoryProducts.map((product) => (
+                        <tr key={product.id} className="flex flex-col md:table-row border-b border-gray-200 md:border-gray-50 hover:bg-orange-50/30 transition-colors p-4 md:p-0 gap-3 md:gap-0">
+                          
+                          <td className="block md:table-cell md:p-4 font-bold text-gray-800 text-lg md:text-base">
+                            {product.title}
+                          </td>
+                          
+                          <td className="block md:table-cell md:p-4">
+                            <div className="flex flex-wrap gap-2">
+                              {Object.entries(product.prices).map(([size, price]) => (
+                                <span key={size} className="bg-orange-50 md:bg-gray-100 text-orange-700 md:text-gray-700 text-sm md:text-xs px-3 py-1 rounded-full font-semibold border border-orange-200 md:border-gray-200">
+                                  {size}: {price} ج.م
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                          
+                          <td className="block md:table-cell md:p-4">
+                            <div className="flex flex-wrap md:justify-center gap-2">
+                              {Object.entries(product.prices).map(([size, price]) => (
+                                <button
+                                  key={size}
+                                  onClick={() => handleEditPrice(product.id, size, price)}
+                                  className="bg-orange-100 text-orange-600 text-sm md:text-xs px-4 py-2 md:px-3 md:py-1.5 rounded-lg font-bold hover:bg-orange-500 hover:text-white transition-colors cursor-pointer flex-1 md:flex-none text-center"
+                                >
+                                  تعديل ({size})
+                                </button>
+                              ))}
+                              <button
+                                onClick={() => handleDeleteProduct(product.id, product.title)}
+                                className="bg-red-50 text-red-500 text-sm md:text-xs px-4 py-2 md:px-3 md:py-1.5 rounded-lg font-bold hover:bg-red-500 hover:text-white transition-colors cursor-pointer flex-1 md:flex-none text-center"
+                              >
+                                مسح
+                              </button>
+                            </div>
+                          </td>
+                          
+                        </tr>
+                      ))}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
