@@ -14,8 +14,8 @@ const nextConfig: NextConfig = {
 
 const withPWAConfig = withPWA({
   dest: "public",
-  disable: process.env.NODE_ENV === "development",
+  disable: !isProd,
   register: true,
 });
 
-export default withPWAConfig(nextConfig);
+export default isProd ? withPWAConfig(nextConfig) : nextConfig;

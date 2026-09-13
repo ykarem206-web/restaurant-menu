@@ -4,14 +4,37 @@ import Header from "./header";
 import ProductsList from "./productsList";
 import Filter from "./filter";
 import Cart from "./cart";
-import { initialProducts, CartItem, Product } from "@/data/menuData";
+import { CartItem, Product } from "@/data/menuData";
+import { collection, getDocs} from "firebase/firestore";
+import { db } from "@/config/firebase"
 
 export default function MainApp () {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState("الكل");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const isManualScroll = useRef(false);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const fetchedProducts: Product[] = [];
+        
+        querySnapshot.forEach((doc) => {
+          fetchedProducts.push(doc.data() as Product);
+        });
+
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products: ", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   function addToCart (product: Omit<CartItem, 'count'>) {
     const existingItem = cartItems.find((item) => product.id === item.id && product.selectedSize === item.selectedSize);
@@ -44,6 +67,7 @@ export default function MainApp () {
   };
 
   useEffect(() => {
+    if (products.length === 0) return;
     const categories = Array.from(new Set(products.map((p) => p.category)));
 
     const observer = new IntersectionObserver(
@@ -81,6 +105,15 @@ export default function MainApp () {
       window.removeEventListener("scroll", handleTopScroll);
     };
   }, [products]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-50 items-center justify-center">
+        <div className="w-16 h-16 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600 font-bold">جاري تحميل المنيو...</p>
+      </div>
+    );
+  }
 
 
   return (
