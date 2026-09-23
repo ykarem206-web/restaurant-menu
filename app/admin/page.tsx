@@ -174,10 +174,10 @@ export default function AdminDashboard() {
               <button type="button" onClick={() => setIsAddModalOpen(false)} className="text-gray-400 hover:text-red-500 font-bold cursor-pointer">✕</button>
             </div>
             
-            <input type="text" placeholder="اسم الوجبة" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A]" required />
+            <input type="text" placeholder="اسم الوجبة" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] text-black" required />
             
 
-            <input list="categories" placeholder="اسم القسم (مثال: الشاورما)" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A]" required />
+            <input list="categories" placeholder="اسم القسم (مثال: الشاورما)" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] text-black" required />
             <datalist id="categories">
               {existingCategories.map((catName: string) => (
               <option key={catName} value={catName} />
@@ -189,11 +189,11 @@ export default function AdminDashboard() {
               placeholder="رابط صورة الوجبة (اختياري)" 
               value={newImageUrl} 
               onChange={(e) => setNewImageUrl(e.target.value)} 
-              className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] text-right" 
+              className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] text-right text-black" 
               dir="ltr" 
             />
 
-            <textarea placeholder="وصف الوجبة (اختياري)" value={newDesc} onChange={(e) => setNewDesc(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] resize-none" rows={2} />
+            <textarea placeholder="وصف الوجبة (اختياري)" value={newDesc} onChange={(e) => setNewDesc(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] text-black resize-none" rows={2} />
             
             <div className="flex flex-col gap-2">
               <label className="text-sm font-bold text-gray-700">الأحجام والأسعار</label>
@@ -201,10 +201,10 @@ export default function AdminDashboard() {
                 <div key={index} className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="الحجم (مثال: لبناني، سوري)"
+                    placeholder="الحجم (مثال:عادي، لبناني، سوري)"
                     value={item.size}
                     onChange={(e) => handlePriceChange(index, 'size', e.target.value)}
-                    className="border p-3 rounded-xl w-1/2 outline-none focus:border-[#CF9D3A]"
+                    className="border p-3 rounded-xl w-1/2 outline-none focus:border-[#CF9D3A] text-black"
                     required
                   />
                   <input
@@ -212,7 +212,7 @@ export default function AdminDashboard() {
                     placeholder="السعر (ج.م)"
                     value={item.price}
                     onChange={(e) => handlePriceChange(index, 'price', e.target.value)}
-                    className="border p-3 rounded-xl w-1/2 outline-none focus:border-[#CF9D3A]"
+                    className="border p-3 rounded-xl w-1/2 outline-none focus:border-[#CF9D3A] text-black"
                     required
                   />
                 </div>
