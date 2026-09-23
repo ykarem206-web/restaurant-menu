@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "مطعم بيت الشام",
   description: "اطلب أونلاين من مطعم بيت الشام",
-  manifest: "/restaurant-menu/manifest.json",
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
