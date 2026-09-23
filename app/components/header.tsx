@@ -2,15 +2,31 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <div className="w-full flex justify-center items-center bg-linear-to-b from-neutral-900 to-neutral-800 py-6 lg:py-8 shadow-lg rounded-b-3xl lg:rounded-b-[3rem] mb-2 border-b-4 border-orange-500">
-      <Image 
-        alt="logo" 
-        src="./images/IMG_013823.JPG" 
-        width={160} 
-        height={100} 
-        className="rounded-2xl shadow-md object-contain bg-white/5 p-2 lg:scale-110 transition-transform" 
-        unoptimized
-      />
+    <div className="relative w-full mb-16 md:mb-20">
+      
+      <div className="relative w-full h-55 md:h-95 lg:h-112.5 rounded-b-4xl overflow-hidden shadow-sm">
+        <Image
+          src="/cover.png" 
+          alt="كڤر مطعم بيت الشام"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/5"></div>
+      </div>
+
+      <div className="absolute left-1/2 -translate-x-1/2 -bottom-10 md:-bottom-14 z-10">
+        <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full border-[5px] border-gray-50 bg-white overflow-hidden shadow-lg flex items-center justify-center">
+          <Image
+            src="/logo.png" 
+            alt="لوجو بيت الشام"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+      </div>
+      
     </div>
   );
 }

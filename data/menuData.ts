@@ -5,7 +5,8 @@ export type Product = {
   title: string;
   category: string;
   description: string;
-  prices: { [key: string]: number }; 
+  prices: { size: string; price: number }[];
+  imageUrl?: string;
 };
 
 export type CartItem = Product & {

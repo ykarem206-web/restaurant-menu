@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "منيو فرسان الشام",
-  description: "اطلب أونلاين من مطعم فرسان الشام",
+  title: "مطعم بيت الشام",
+  description: "اطلب أونلاين من مطعم بيت الشام",
   manifest: "/restaurant-menu/manifest.json",
 };
 

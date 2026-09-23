@@ -1,24 +1,24 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-const categories = [
+export const categories = [
   { id: 1, title: "الكل" },
-  { id: 2, title: "المناقيش" },
-  { id: 3, title: "البيتزا" },
-  { id: 4, title: "شاورما" },
-  { id: 5, title: "فتات الشاورما" },
-  { id: 6, title: "وجبات الشاورما" },
-  { id: 7, title: "غربي" },
-  { id: 8, title: "حلويات" },
-  { id: 9, title: "اوزان الشاورما" },
-  { id: 10, title: "سندوتش البطاطا" },
-  { id: 11, title: "ريزو" },
-  { id: 12, title: "مقبلات بارد" },
-  { id: 13, title: "مقبلات ساخنة" },
-  { id: 14, title: "قسم الكريب" },
-  { id: 15, title: "فراخ شواية سوري" },
-  { id: 16, title: "فرايد تشيكن سوري" },
-  { id: 17, title: "ماريا" },
+  { id: 2, title: "الشاورما" },
+  { id: 3, title: "الكيزر" },
+  { id: 5, title: "وجبات الشاورما" },
+  { id: 6, title: "سندوتش ع الفحم" },
+  { id: 7, title: "سندوتش غربي" },
+  { id: 8, title: "وجبات غربي" },
+  { id: 9, title: "الفتات" },
+  { id: 10, title: "ميني فتة" },
+  { id: 11, title: "بوكس الشاورما" },
+  { id: 12, title: "شاورما بالكيلو" },
+  { id: 13, title: "فراخ ع الفحم" },
+  { id: 14, title: "فروج سوري" },
+  { id: 15, title: "وجبات ع الفحم" },
+  { id: 16, title: "مشويات بالكيلو" },
+  { id: 17, title: "مقبلات" },
+  { id: 4, title: "الإضافات" },
 ];
 
 export default function Filter({ 
@@ -66,8 +66,8 @@ export default function Filter({
             onClick={() => handleCategoryClick(title)}
             className={`whitespace-nowrap px-6 py-2 rounded-full font-bold transition-all duration-300 shadow-sm cursor-pointer border ${
               isActive
-                ? "bg-orange-500 text-white border-orange-500 shadow-orange-500/30 shadow-md scale-105"
-                : "bg-white text-gray-600 border-gray-200 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-300"
+                ? "bg-[#CF9D3A] text-white border-[#CF9D3A] shadow-[#CF9D3A]/30 shadow-md scale-105"
+                : "bg-white text-gray-600 border-gray-200 hover:bg-orange-50 hover:text-[#CF9D3A] hover:border-orange-300"
             }`}
           >
             {title}

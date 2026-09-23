@@ -1,7 +1,7 @@
 {
-  "name": "منيو فرسان الشام",
-  "short_name": "فرسان الشام",
-  "description": "منيو مطعم فرسان الشام للطلبات المباشرة",
+  "name": "مطعم بيت الشام",
+  "short_name": "بيت الشام",
+  "description": "منيو مطعم بيت الشام للطلبات المباشرة",
   "start_url": "/restaurant-menu/",
   "display": "standalone",
   "background_color": "#f9fafb",

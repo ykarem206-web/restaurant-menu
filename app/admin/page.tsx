@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { collection, getDocs, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebase"; 
 import { Product } from "../../data/menuData";
+import { categories } from "../components/filter"
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,8 +15,18 @@ export default function AdminDashboard() {
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [newDesc, setNewDesc] = useState("");
-  const [newSize, setNewSize] = useState("عادي");
-  const [newPrice, setNewPrice] = useState("");
+  const [newPrices, setNewPrices] = useState([{ size: '', price: '' }]);
+  const [newImageUrl, setNewImageUrl] = useState("");
+
+  const handlePriceChange = (index: number, field: string, value: string) => {
+    const updatedPrices = [...newPrices];
+    updatedPrices[index] = { ...updatedPrices[index], [field]: value };
+    setNewPrices(updatedPrices);
+    };
+
+  const addPriceRow = () => {
+  setNewPrices([...newPrices, { size: '', price: '' }]);
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,30 +56,29 @@ export default function AdminDashboard() {
   };
 
 
-  const handleEditPrice = async (productId: number, size: string, oldPrice: number) => {
-    const newPriceStr = prompt(`أدخل السعر الجديد للحجم (${size}):`, oldPrice.toString());
+  const handleEditPrice = async (productId: number, sizeToEdit: string, oldPrice: number) => {
+    const newPrice = prompt(`أدخل السعر الجديد للحجم (${sizeToEdit}):`, oldPrice.toString());
     
-    if (newPriceStr !== null && newPriceStr !== "") {
-      const newPrice = parseInt(newPriceStr);
-      if (isNaN(newPrice)) {
-        alert("برجاء إدخال أرقام فقط!");
-        return;
-      }
+    if (!newPrice || isNaN(Number(newPrice))) return;
 
-      try {
-        const productRef = doc(db, "products", productId.toString());
-        const productToUpdate = products.find(p => p.id === productId);
-        
-        if (productToUpdate) {
-          const updatedPrices = { ...productToUpdate.prices, [size]: newPrice };
-          await updateDoc(productRef, { prices: updatedPrices });
-          alert("تم تحديث السعر بنجاح! ✅");
-          fetchProducts(); 
-        }
-      } catch (error) {
-        console.error("Error updating price: ", error);
-        alert("حدث خطأ أثناء التحديث.");
-      }
+    try {
+      const product = products.find(p => p.id === productId);
+      if (!product || !Array.isArray(product.prices)) return;
+
+      const updatedPrices = product.prices.map((p) => 
+        p.size === sizeToEdit ? { ...p, price: Number(newPrice) } : p
+      );
+
+      await updateDoc(doc(db, "products", productId.toString()), {
+        prices: updatedPrices
+      });
+
+      fetchProducts();
+      alert("تم تعديل السعر بنجاح!");
+      
+    } catch (error) {
+      console.error("Error updating price:", error);
+      alert("حدث خطأ أثناء التعديل");
     }
   };
 
@@ -90,7 +100,7 @@ export default function AdminDashboard() {
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle || !newCategory || !newSize || !newPrice) {
+    if (!newTitle || !newCategory || !newPrices) {
       alert("برجاء إكمال البيانات الأساسية!");
       return;
     }
@@ -102,7 +112,8 @@ export default function AdminDashboard() {
       title: newTitle,
       category: newCategory,
       description: newDesc,
-      prices: { [newSize]: parseInt(newPrice) }
+      prices: newPrices.map(p => ({size: p.size, price: Number(p.price)})),
+      imageUrl: newImageUrl
     };
 
     try {
@@ -110,7 +121,7 @@ export default function AdminDashboard() {
       alert("تمت الإضافة بنجاح! 🎉");
       setIsAddModalOpen(false); 
 
-      setNewTitle(""); setNewCategory(""); setNewDesc(""); setNewPrice(""); setNewSize("عادي");
+      setNewTitle(""); setNewCategory(""); setNewDesc(""); setNewPrices([{ size: '', price: '' }]); setNewImageUrl("");
       fetchProducts();
     } catch (error) {
       console.error("Error adding product: ", error);
@@ -126,7 +137,9 @@ export default function AdminDashboard() {
     return acc;
   }, {} as Record<string, Product[]>);
 
-  const existingCategories = Array.from(new Set(products.map(p => p.category)));
+  const importedCategoriesNames = categories.map((c: string | { title: string }) => typeof c === 'object' ? c.title : c);
+  const productCategoriesNames = products.map((p: { category: string | { title: string } }) => typeof p.category === 'object' ? p.category.title : p.category);
+  const existingCategories = Array.from(new Set([...importedCategoriesNames, ...productCategoriesNames]));
 
   if (!isAuthenticated) {
     return (
@@ -138,10 +151,10 @@ export default function AdminDashboard() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="أدخل كلمة المرور..."
-            className="w-full border border-gray-300 rounded-xl p-3 mb-4 outline-none focus:border-orange-500 text-center"
+            className="w-full border border-gray-300 rounded-xl p-3 mb-4 outline-none focus:border-[#CF9D3A] text-center text-black"
             required
           />
-          <button type="submit" className="w-full bg-orange-500 text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-colors cursor-pointer">
+          <button type="submit" className="w-full bg-[#CF9D3A] text-white font-bold py-3 rounded-xl hover:opacity-80 transition-colors cursor-pointer">
             دخول
           </button>
         </form>
@@ -161,22 +174,59 @@ export default function AdminDashboard() {
               <button type="button" onClick={() => setIsAddModalOpen(false)} className="text-gray-400 hover:text-red-500 font-bold cursor-pointer">✕</button>
             </div>
             
-            <input type="text" placeholder="اسم الوجبة" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-orange-500" required />
+            <input type="text" placeholder="اسم الوجبة" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A]" required />
             
 
-            <input list="categories" placeholder="اسم القسم (مثال: شاورما)" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-orange-500" required />
+            <input list="categories" placeholder="اسم القسم (مثال: الشاورما)" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A]" required />
             <datalist id="categories">
-              {existingCategories.map(cat => <option key={cat} value={cat} />)}
+              {existingCategories.map((catName: string) => (
+              <option key={catName} value={catName} />
+              ))}
             </datalist>
 
-            <textarea placeholder="وصف الوجبة (اختياري)" value={newDesc} onChange={(e) => setNewDesc(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-orange-500 resize-none" rows={2} />
+            <input 
+              type="url" 
+              placeholder="رابط صورة الوجبة (اختياري)" 
+              value={newImageUrl} 
+              onChange={(e) => setNewImageUrl(e.target.value)} 
+              className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] text-right" 
+              dir="ltr" 
+            />
+
+            <textarea placeholder="وصف الوجبة (اختياري)" value={newDesc} onChange={(e) => setNewDesc(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-[#CF9D3A] resize-none" rows={2} />
             
-            <div className="flex gap-2">
-              <input type="text" placeholder="الحجم (مثال: عادي، وسط)" value={newSize} onChange={(e) => setNewSize(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-orange-500 flex-1" required />
-              <input type="number" placeholder="السعر (ج.م)" value={newPrice} onChange={(e) => setNewPrice(e.target.value)} className="border p-3 rounded-xl outline-none focus:border-orange-500 flex-1" required min="1" />
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-bold text-gray-700">الأحجام والأسعار</label>
+              {newPrices.map((item, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="الحجم (مثال: لبناني، سوري)"
+                    value={item.size}
+                    onChange={(e) => handlePriceChange(index, 'size', e.target.value)}
+                    className="border p-3 rounded-xl w-1/2 outline-none focus:border-[#CF9D3A]"
+                    required
+                  />
+                  <input
+                    type="number"
+                    placeholder="السعر (ج.م)"
+                    value={item.price}
+                    onChange={(e) => handlePriceChange(index, 'price', e.target.value)}
+                    className="border p-3 rounded-xl w-1/2 outline-none focus:border-[#CF9D3A]"
+                    required
+                  />
+                </div>
+              ))}
+              <button 
+                type="button" 
+                onClick={addPriceRow} 
+                className="text-[#CF9D3A] font-bold text-right text-sm mt-1 w-fit hover:underline"
+              >
+                + إضافة حجم وسعر آخر
+              </button>
             </div>
 
-            <button type="submit" className="bg-orange-500 text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-colors mt-2 cursor-pointer">
+            <button type="submit" className="bg-[#CF9D3A] text-white font-bold py-3 rounded-xl hover:opacity-80 transition-colors mt-2 cursor-pointer">
               حفظ الوجبة
             </button>
           </form>
@@ -220,7 +270,7 @@ export default function AdminDashboard() {
                   {Object.entries(groupedProducts).map(([category, categoryProducts]) => (
                     <React.Fragment key={category}>
 
-                      <tr className="block md:table-row bg-orange-100/50 border-y border-orange-200">
+                      <tr className="block md:table-row bg-[#FDF5E6]/50 border-y border-orange-200">
                         <td colSpan={3} className="block md:table-cell p-3 md:p-4 font-extrabold text-orange-800 text-lg">
                           📋 قسم: {category}
                         </td>
@@ -235,28 +285,28 @@ export default function AdminDashboard() {
                           
                           <td className="block md:table-cell md:p-4">
                             <div className="flex flex-wrap gap-2">
-                              {Object.entries(product.prices).map(([size, price]) => (
-                                <span key={size} className="bg-orange-50 md:bg-gray-100 text-orange-700 md:text-gray-700 text-sm md:text-xs px-3 py-1 rounded-full font-semibold border border-orange-200 md:border-gray-200">
-                                  {size}: {price} ج.م
+                              {product.prices.map((item, index) => (
+                                <span key={index} className="bg-[#CF9D3A]/10 md:bg-gray-100 text-[#3E2723] md:text-gray-700 text-sm md:text-base px-2 py-1 rounded">
+                                  {item.size}: {item.price} ج.م
                                 </span>
                               ))}
                             </div>
                           </td>
-                          
+
                           <td className="block md:table-cell md:p-4">
                             <div className="flex flex-wrap md:justify-center gap-2">
-                              {Object.entries(product.prices).map(([size, price]) => (
+                              {product.prices.map((item, index) => (
                                 <button
-                                  key={size}
-                                  onClick={() => handleEditPrice(product.id, size, price)}
-                                  className="bg-orange-100 text-orange-600 text-sm md:text-xs px-4 py-2 md:px-3 md:py-1.5 rounded-lg font-bold hover:bg-orange-500 hover:text-white transition-colors cursor-pointer flex-1 md:flex-none text-center"
+                                  key={`edit-${index}`}
+                                  onClick={() => handleEditPrice(product.id, item.size, item.price)}
+                                  className="bg-[#CF9D3A]/10 text-[#CF9D3A] text-sm md:text-xs px-4 py-2 md:px-3 md:py-1.5 rounded-lg font-bold transition-colors hover:bg-[#CF9D3A]/20"
                                 >
-                                  تعديل ({size})
+                                  تعديل {item.size}
                                 </button>
                               ))}
                               <button
                                 onClick={() => handleDeleteProduct(product.id, product.title)}
-                                className="bg-red-50 text-red-500 text-sm md:text-xs px-4 py-2 md:px-3 md:py-1.5 rounded-lg font-bold hover:bg-red-500 hover:text-white transition-colors cursor-pointer flex-1 md:flex-none text-center"
+                                className="bg-red-50 text-red-500 text-sm md:text-xs px-4 py-2 md:px-3 md:py-1.5 rounded-lg font-bold transition-colors hover:bg-red-100"
                               >
                                 مسح
                               </button>

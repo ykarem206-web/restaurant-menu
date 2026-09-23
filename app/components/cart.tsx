@@ -91,7 +91,7 @@ export default function Cart(props: {
         <div className="border-t border-gray-100 pt-3">
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-600 font-bold text-sm">إجمالي السعر:</span>
-            <span className="text-2xl font-black text-orange-600">
+            <span className="text-2xl font-black text-[#CF9D3A]">
               {totalPrice} ج.م
             </span>
           </div>
@@ -99,7 +99,7 @@ export default function Cart(props: {
 
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-3 rounded-xl transition-all active:scale-[0.98] shadow-md shadow-orange-500/20"
+            className="w-full bg-[#CF9D3A] hover:opacity-80 text-white font-bold text-lg py-3 rounded-xl transition-all active:scale-[0.98] shadow-md shadow-[#CF9D3A]/20 cursor-pointer"
           >
             إتمام الطلب
           </button>
@@ -137,7 +137,7 @@ export default function Cart(props: {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="محمد أحمد..."
-                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50"
+                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-[#CF9D3A] focus:ring-1 focus:ring-[#CF9D3A] transition-all bg-gray-50"
                 />
               </div>
 
@@ -149,7 +149,7 @@ export default function Cart(props: {
                   onChange={(e) => setCustomerAddress(e.target.value)}
                   placeholder="المنطقة، الشارع، رقم العمارة، الدور..."
                   rows={2}
-                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50 resize-none"
+                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-[#CF9D3A] focus:ring-1 focus:ring-[#CF9D3A] transition-all bg-gray-50 resize-none"
                 />
               </div>
 
@@ -166,7 +166,7 @@ export default function Cart(props: {
                     setErrorMsg("");
                   }}
                   placeholder="01xxxxxxxxx"
-                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all bg-gray-50 text-left"
+                  className="w-full border border-gray-200 text-black rounded-xl p-3 outline-none focus:border-[#CF9D3A] focus:ring-1 focus:ring-[#CF9D3A] transition-all bg-gray-50 text-left"
                   dir="ltr"
                 />
               </div>
@@ -203,7 +203,7 @@ function SelectedProduct({
     <li className="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 shadow-sm list-none">
       <div className="flex flex-col">
         <span className="font-bold text-gray-800 text-sm line-clamp-1">
-          {title} <span className="text-orange-500 text-xs font-bold bg-orange-50 px-2 py-0.5 rounded-md mr-1">({selectedSize})</span>
+          {title} <span className="text-[#CF9D3A] text-xs font-bold bg-orange-50 px-2 py-0.5 rounded-md mr-1">({selectedSize})</span>
         </span>
         <span className="text-xs text-gray-500 font-medium mt-1.5 flex items-center gap-1">
           <span className="text-gray-800 font-bold">{selectedPrice} ج.م</span>
