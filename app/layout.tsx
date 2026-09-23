@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "مطعم بيت الشام",
   description: "اطلب أونلاين من مطعم بيت الشام",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export const viewport: Viewport = {
