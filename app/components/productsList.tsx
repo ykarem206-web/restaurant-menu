@@ -3,22 +3,22 @@ import Image from "next/image";
 
 
 const categoryImages: { [key: string]: string } = {
-  "الشاورما": "/categories/shawrma.jpg",
-  "الكيزر": "/categories/kayzr.png",
-  "وجبات الشاورما": "/categories/wgbatelshawrma.png",
-  "سندوتش ع الفحم": "/categories/sandwitsh3lfa7m.png",
-  "سندوتش غربي": "/categories/sandwitsh8arby.jpg",
-  "وجبات غربي": "/categories/wgbat8arby.png",
-  "الفتات": "/categories/fatitelshawrma.png",
-  "ميني فتة": "/categories/fatitelshawrma.png",
-  "بوكس الشاورما": "/categories/boxelshawrma.png",
-  "شاورما بالكيلو": "/categories/shawrmabykilo.png",
-  "فراخ ع الفحم": "/categories/fera53lfa7m.png",
-  "فروج سوري": "/categories/fera5shwaya.png",
-  "وجبات ع الفحم": "/categories/wgbat3lfa7n.png",
-  "مشويات بالكيلو": "/categories/mshwyatbykilo.png",
-  "مقبلات": "/categories/mokabilat.png",
-  "الإضافات": "/categories/edafat.png",
+  "الشاورما": "./categories/shawrma.jpg",
+  "الكيزر": "./categories/kayzr.png",
+  "وجبات الشاورما": "./categories/wgbatelshawrma.png",
+  "سندوتش ع الفحم": "./categories/sandwitsh3lfa7m.png",
+  "سندوتش غربي": "./categories/sandwitsh8arby.jpg",
+  "وجبات غربي": "./categories/wgbat8arby.png",
+  "الفتات": "./categories/fatitelshawrma.png",
+  "ميني فتة": "./categories/fatitelshawrma.png",
+  "بوكس الشاورما": "./categories/boxelshawrma.png",
+  "شاورما بالكيلو": "./categories/shawrmabykilo.png",
+  "فراخ ع الفحم": "./categories/fera53lfa7m.png",
+  "فروج سوري": "./categories/fera5shwaya.png",
+  "وجبات ع الفحم": "./categories/wgbat3lfa7n.png",
+  "مشويات بالكيلو": "./categories/mshwyatbykilo.png",
+  "مقبلات": "./categories/mokabilat.png",
+  "الإضافات": "./categories/edafat.png",
 };
 
 export default function ProductsList(props: {
