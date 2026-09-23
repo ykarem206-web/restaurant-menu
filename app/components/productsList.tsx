@@ -8,7 +8,7 @@ const categoryImages: { [key: string]: string } = {
   "وجبات الشاورما": "/categories/wgbatelshawrma.png",
   "سندوتش ع الفحم": "/categories/sandwitsh3lfa7m.png",
   "سندوتش غربي": "/categories/sandwitsh8arby.jpg",
-  "وجبات غربي": "/categories/wgbat8arby.png",
+  "وجبات غربي": "/categories/wgbat8arby.webp",
   "الفتات": "/categories/fatitelshawrma.png",
   "ميني فتة": "/categories/fatitelshawrma.png",
   "بوكس الشاورما": "/categories/boxelshawrma.png",
