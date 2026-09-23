@@ -3,12 +3,12 @@ import { getFirestore } from "firebase/firestore";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAM4vD9aAZR31Htvy5IkvI5W4ddylBtrF4",
-  authDomain: "forsan-elsham-menu.firebaseapp.com",
-  projectId: "forsan-elsham-menu",
-  storageBucket: "forsan-elsham-menu.firebasestorage.app",
-  messagingSenderId: "131288851554",
-  appId: "1:131288851554:web:6f00f04c6fcbbbf9535d3b"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 
